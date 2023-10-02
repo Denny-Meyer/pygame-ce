@@ -151,6 +151,11 @@ jobs:
       - uses: TheMrMilchmann/setup-msvc-dev@v3  # this lets us use the developer command prompt on windows
         with:
           arch: ${{ matrix.msvc-dev-arch }}
+
+      - name: Substitute core count in pip config file for speed
+        shell: bash
+        run: sed -i "s/{nproc}/$(nproc)/g" buildconfig/pip_config.ini
+
       - name: Build and test wheels
         shell: cmd
         run: |

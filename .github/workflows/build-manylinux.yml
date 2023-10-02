@@ -110,6 +110,9 @@ jobs:
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
 
+    - name: Substitute core count in pip config file for speed
+      run: sed -i "s/{nproc}/$(nproc)/g" buildconfig/pip_config.ini
+
     - name: Build and test wheels
       env:
         # set custom pygame images

@@ -66,6 +66,8 @@ jobs:
       env:
         PIP_CONFIG_FILE: "buildconfig/pip_config.ini"
       run: |
+        # Substitute core count in pip config file for speed
+        sed -i "s/{nproc}/$(nproc)/g" $PIP_CONFIG_FILE
         python3 setup.py docs
         python3 setup.py sdist
         pip3 install dist/pygame-*.tar.gz -vv

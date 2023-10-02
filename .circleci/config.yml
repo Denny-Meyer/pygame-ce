@@ -46,6 +46,10 @@ jobs:
           command: docker build -t manylinux2014_base_aarch64 -f Dockerfile-aarch64 .
 
       - run:
+          name: Substitute core count in pip config file for speed
+          command: sed -i "s/{nproc}/$(nproc)/g" buildconfig/pip_config.ini
+
+      - run:
           name: Build the Linux wheels.
           command: |
             pip3 install --user cibuildwheel==2.16.1

@@ -16,7 +16,7 @@ mkdir $MACDEP_CACHE_PREFIX_PATH
 export PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 
 # for great speed.
-export MAKEFLAGS="-j 4"
+export MAKEFLAGS="-j $(sysctl -n hw.logicalcpu)"
 
 # With this we
 # 1) Force install prefix to /usr/local

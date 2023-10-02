@@ -83,6 +83,8 @@ jobs:
         # Build a wheel, install it for running unit tests
         run: |
           export PIP_CONFIG_FILE=buildconfig/pip_config.ini
+          echo "\nSubstituting core count in pip config file for speed\n"
+          sed -i "s/{nproc}/$(nproc)/g" $PIP_CONFIG_FILE
           echo "\nBuilding pygame wheel\n"
           python3 setup.py docs
           pip3 wheel . --wheel-dir /artifacts -vvv

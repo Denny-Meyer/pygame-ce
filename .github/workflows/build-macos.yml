@@ -176,6 +176,9 @@ jobs:
           key: macdep-${{ hashFiles('buildconfig/manylinux-build/**') }}-${{ hashFiles('buildconfig/macdependencies/*.sh') }}-${{ matrix.macarch }}
           fail-on-cache-miss: true
 
+      - name: Substitute core count in pip config file for speed
+        run: sed -i '' "s/{nproc}/$(sysctl -n hw.logicalcpu)/g" buildconfig/pip_config.ini
+
       - name: Build and test wheels
         uses: pypa/cibuildwheel@v2.16.1
 
