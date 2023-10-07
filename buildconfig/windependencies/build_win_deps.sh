@@ -5,6 +5,8 @@ set -e -x
 # //\\// replaces all \ with / in the variable 
 export WIN_PREFIX_PATH="${GITHUB_WORKSPACE//\\//}/pygame_win_deps_${WIN_ARCH}"
 
+export PKG_CONFIG_PATH="$WIN_PREFIX_PATH/lib/pkgconfig:$PKG_CONFIG_PATH"
+
 mkdir $WIN_PREFIX_PATH
 
 # for great speed.
@@ -58,7 +60,6 @@ bash opus/build-opus.sh # needs libogg (which is a container format)
 bash sdl_libs/build-sdl2.sh
 
 # fluidsynth (for sdl_mixer)
-bash gettext/build-gettext.sh
 bash glib/build-glib.sh # depends on gettext
 bash sndfile/build-sndfile.sh
 bash fluidsynth/build-fluidsynth.sh
