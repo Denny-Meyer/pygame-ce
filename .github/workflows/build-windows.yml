@@ -64,6 +64,7 @@ jobs:
             mingw-w64-${{ matrix.winarch }}-gcc
             mingw-w64-${{ matrix.winarch }}-cmake
             mingw-w64-${{ matrix.winarch }}-autotools
+            mingw-w64-${{ matrix.winarch }}-nasm
 
       - name: Test for Win Deps cache hit
         id: windep-cache
