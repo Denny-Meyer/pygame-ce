@@ -25,7 +25,7 @@ export PG_BASE_CMAKE_FLAGS="-DCMAKE_INSTALL_PREFIX=$WIN_PREFIX_PATH \
     -DCMAKE_BUILD_TYPE=Release \
     -DBUILD_SHARED_LIBS=true \
     -DCMAKE_C_COMPILER=$CC -DCMAKE_CXX_COMPILER=$CXX -DCMAKE_MAKE_PROGRAM=make \
-    -G \"MSYS Makefiles\""
+    -G 'MSYS Makefiles'"
 
 export ARCHS_CONFIG_FLAG="--prefix=$WIN_PREFIX_PATH"
 
@@ -44,8 +44,6 @@ bash libtiff/build-tiff.sh
 bash libwebp/build-webp.sh
 
 # freetype (also sdl_ttf dep)
-bash brotli/build-brotli.sh
-bash bzip2/build-bzip2.sh
 bash freetype/build-freetype.sh
 
 # sdl_mixer deps
