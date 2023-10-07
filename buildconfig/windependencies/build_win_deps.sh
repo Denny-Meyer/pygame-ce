@@ -19,13 +19,13 @@ export CXX="g++"
 # 3) make release binaries
 # 4) build shared libraries
 # 5) make cmake use gcc/g++/make
-# 6) make cmake generate msys compatible makefiles
 export PG_BASE_CMAKE_FLAGS="-DCMAKE_INSTALL_PREFIX=$WIN_PREFIX_PATH \
     -DCMAKE_INSTALL_LIBDIR:PATH=lib \
     -DCMAKE_BUILD_TYPE=Release \
     -DBUILD_SHARED_LIBS=true \
-    -DCMAKE_C_COMPILER=$CC -DCMAKE_CXX_COMPILER=$CXX -DCMAKE_MAKE_PROGRAM=make \
-    -G 'MSYS Makefiles'"
+    -DCMAKE_C_COMPILER=$CC -DCMAKE_CXX_COMPILER=$CXX -DCMAKE_MAKE_PROGRAM=make"
+
+export CMAKE_GENERATOR="MSYS Makefiles"
 
 export ARCHS_CONFIG_FLAG="--prefix=$WIN_PREFIX_PATH"
 
