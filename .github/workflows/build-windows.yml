@@ -61,8 +61,9 @@ jobs:
         with:
           msystem: ${{ matrix.msystem }}
           install: >-
-            cmake
-            gcc
+            mingw-w64-${{ matrix.winarch }}-gcc
+            mingw-w64-${{ matrix.winarch }}-cmake
+            mingw-w64-${{ matrix.winarch }}-autotools
 
       - name: Test for Win Deps cache hit
         id: windep-cache
