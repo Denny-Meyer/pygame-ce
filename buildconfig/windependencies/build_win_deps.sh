@@ -2,8 +2,12 @@
 
 set -e -x
 
-# //\\// replaces all \ with / in the variable 
-export WIN_PREFIX_PATH="${GITHUB_WORKSPACE//\\//}/pygame_win_deps_${WIN_ARCH}"
+# The below three lines convert something like D:\path\goes\here to /d/path/goes/here
+export BASE_DIR=$(echo "$GITHUB_WORKSPACE" | tr '[:upper:]' '[:lower:]')
+export BASE_DIR="${BASE_DIR//\\//}"  # //\\// replaces all \ with / in the variable
+export BASE_DIR="${BASE_DIR//:/}"  # remove colon from drive part
+
+export WIN_PREFIX_PATH="$BASE_DIR/pygame_win_deps_$WIN_ARCH"
 
 export PKG_CONFIG_PATH="$WIN_PREFIX_PATH/lib/pkgconfig:$PKG_CONFIG_PATH"
 
