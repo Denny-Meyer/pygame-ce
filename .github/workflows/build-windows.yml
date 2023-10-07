@@ -55,6 +55,16 @@ jobs:
           }
 
     steps:
+      - name: Test for Win Deps cache hit
+        id: windep-cache
+        uses: actions/cache@v3.3.2
+        with:
+          path: ${{ github.workspace }}/pygame_win_deps_${{ matrix.winarch }}
+          # The hash of all files in buildconfig manylinux-build and windependencies is 
+          # the key to the cache. If anything changes here, the deps are built again
+          key: windep-${{ hashFiles('buildconfig/manylinux-build/**') }}-${{ hashFiles('buildconfig/windependencies/*.sh') }}-${{ matrix.winarch }}
+          lookup-only: true
+
       - run: git config --global core.autocrlf input  # do not introduce carriage returns
       - uses: actions/checkout@v4.1.0
       - uses: msys2/setup-msys2@v2
@@ -65,16 +75,6 @@ jobs:
             mingw-w64-${{ matrix.winarch }}-cmake
             mingw-w64-${{ matrix.winarch }}-autotools
             mingw-w64-${{ matrix.winarch }}-nasm
-
-      - name: Test for Win Deps cache hit
-        id: windep-cache
-        uses: actions/cache@v3.3.2
-        with:
-          path: ${{ github.workspace }}/pygame_win_deps_${{ matrix.winarch }}
-          # The hash of all files in buildconfig manylinux-build and windependencies is 
-          # the key to the cache. If anything changes here, the deps are built again
-          key: windep-${{ hashFiles('buildconfig/manylinux-build/**') }}-${{ hashFiles('buildconfig/windependencies/*.sh') }}-${{ matrix.winarch }}
-          lookup-only: true
 
       # build win deps on cache miss
       - name: Build Win Deps
