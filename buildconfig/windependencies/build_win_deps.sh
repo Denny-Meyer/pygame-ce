@@ -2,7 +2,8 @@
 
 set -e -x
 
-export WIN_PREFIX_PATH=${GITHUB_WORKSPACE}/pygame_win_deps_${WIN_ARCH}
+# //\\// replaces all \ with / in the variable 
+export WIN_PREFIX_PATH="${GITHUB_WORKSPACE//\\//}/pygame_win_deps_${WIN_ARCH}"
 
 mkdir $WIN_PREFIX_PATH
 
