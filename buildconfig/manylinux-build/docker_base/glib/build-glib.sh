@@ -19,7 +19,7 @@ if [[ "$MAC_ARCH" == "arm64" ]]; then
 fi
 
 CFLAGS=-Wno-error ./configure $ARCHS_CONFIG_FLAG --with-pcre=internal $GLIB_COMPILE_EXTRA_FLAGS --disable-libmount --disable-dbus
-make
+CLFAGS=-Wno-error=declaration-after-statement make
 make install
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
