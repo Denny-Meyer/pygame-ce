@@ -34,6 +34,11 @@ export PG_BASE_CMAKE_FLAGS="-DCMAKE_INSTALL_PREFIX=$PG_DEP_PREFIX \
 
 export PG_BASE_CONFIGURE_FLAGS="--prefix=$PG_DEP_PREFIX"
 
+export PG_BASE_MESON_FLAGS="--prefix=/usr/local/ \
+    -Dlibdir=lib \
+    -Dbuildtype=release \
+    -Ddefault_library=shared"
+
 if [[ "$MAC_ARCH" == "arm64" ]]; then
     # for scripts using ./configure to make arm64 binaries
     export CC="clang -target arm64-apple-macos11.0"
@@ -60,6 +65,9 @@ cd ../manylinux-build/docker_base
 
 # Now start installing dependencies
 # ---------------------------------
+
+# install some buildtools
+bash buildtools/install.sh
 
 # sdl_image deps
 bash zlib-ng/build-zlib-ng.sh
