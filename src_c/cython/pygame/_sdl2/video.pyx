@@ -444,6 +444,70 @@ cdef class Texture:
 
         self.draw_internal(csrcrect, cdstrect, angle, originptr,
                            flip_x, flip_y)
+    
+    cdef draw_internalF(self, SDL_Rect *csrcrect, SDL_FRect *cdstrect, float angle=0, SDL_FPoint *originptr=NULL,
+                       bint flip_x=False, bint flip_y=False):
+        cdef int flip = SDL_FLIP_NONE
+        if flip_x:
+            flip |= SDL_FLIP_HORIZONTAL
+        if flip_y:
+            flip |= SDL_FLIP_VERTICAL
+
+        cdef int res = SDL_RenderCopyExF(self.renderer._renderer, self._tex, csrcrect, cdstrect,
+                                        angle, originptr, <SDL_RendererFlip>flip)
+        if res < 0:
+            raise error()
+
+    cpdef void drawF(self, srcrect=None, dstrect=None, float angle=0, origin=None,
+                    bint flip_x=False, bint flip_y=False):
+        """Copy a portion of the texture to the rendering target
+
+        :param srcrect: The source rectangle on the texture, or ``None`` for the
+                        entire texture.
+        :param dstrect: The destination rectangle on the rendering target, or
+                        ``None`` for the entire rendering target. The texture
+                        will be stretched to fill ``dstrect``.
+        :param float angle: The angle (in degrees) to rotate dstrect around
+                            (clockwise).
+        :param origin: The point around which dstrect will be rotated.
+                       If ``None``, it will equal the center:
+                       ``(dstrect.w/2, dstrect.h/2)``.
+        :param bool flip_x: Flip the drawn texture portion horizontally (x - axis).
+        :param bool flip_y: Flip the drawn texture portion vertically (y - axis).
+        """
+        cdef SDL_Rect src
+        cdef SDL_FRect dst
+        cdef SDL_Rect *csrcrect = NULL
+        cdef SDL_FRect *cdstrect = NULL
+        cdef SDL_FPoint corigin
+        cdef SDL_FPoint *originptr
+
+        if srcrect is not None:
+            csrcrect = pgRect_FromObject(srcrect, &src)
+            if not csrcrect:
+                raise TypeError("the argument is not a rectangle or None")
+
+        if dstrect is not None:
+            cdstrect = pgFRect_FromObject(dstrect, &dst)
+            if cdstrect == NULL:
+                if len(dstrect) == 2:
+                    dst.x = dstrect[0]
+                    dst.y = dstrect[1]
+                    dst.w = self.width
+                    dst.h = self.height
+                    cdstrect = &dst
+                else:
+                    raise TypeError('dstrect must be a position, rect, or None')
+
+        if origin:
+            originptr = &corigin
+            corigin.x = origin[0]
+            corigin.y = origin[1]
+        else:
+            originptr = NULL
+
+        self.draw_internalF(csrcrect, cdstrect, angle, originptr,
+                           flip_x, flip_y)
 
     def draw_triangle(self, p1_xy, p2_xy, p3_xy,
                       p1_uv=(0.0, 0.0), p2_uv=(1.0, 1.0), p3_uv=(0.0, 1.0),
@@ -1047,7 +1111,7 @@ cdef class Renderer:
         .. note:: Textures created by different Renderers cannot shared with each other!
         """
         if isinstance(source, Texture):
-            (<Texture>source).draw(area, dest)
+            (<Texture>source).drawF(area, dest)
         elif isinstance(source, Image):
             (<Image>source).draw(area, dest)
         elif not hasattr(source, 'draw'):

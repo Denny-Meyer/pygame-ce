@@ -10,6 +10,9 @@ cdef extern from "SDL.h" nogil:
     ctypedef struct SDL_Rect:
         int x, y
         int w, h
+    ctypedef struct SDL_FRect:
+        float x, y
+        float w, h
 
     ctypedef enum SDL_PixelFormatEnum:
         SDL_PIXELFORMAT_UNKNOWN
@@ -32,12 +35,14 @@ cdef extern from "SDL.h" nogil:
 
     ctypedef struct SDL_Point:
         int x, y
+    ctypedef struct SDL_FPoint:
+        float x, y
     ctypedef struct SDL_Color:
         Uint8 r, g, b, a
 
     SDL_bool SDL_SetHint(const char *name, const char *value)
     char* SDL_HINT_RENDER_SCALE_QUALITY b'SDL_HINT_RENDER_SCALE_QUALITY'
-
+        
     cdef extern from *:
         """
         #if SDL_VERSION_ATLEAST(2, 0, 18)
@@ -172,6 +177,13 @@ cdef extern from "SDL.h" nogil:
                          const SDL_Rect*        dstrect,
                          const double           angle,
                          const SDL_Point*       center,
+                         const SDL_RendererFlip flip)
+    int SDL_RenderCopyExF(SDL_Renderer*         renderer,
+                         SDL_Texture*           texture,
+                         const SDL_Rect*        srcrect,
+                         const SDL_FRect*       dstrect,
+                         const double           angle,
+                         const SDL_FPoint*      center,
                          const SDL_RendererFlip flip)
     void SDL_RenderPresent(SDL_Renderer* renderer)
     # https://wiki.libsdl.org/SDL_RenderGetViewport
@@ -427,6 +439,11 @@ cdef extern from "pygame.h" nogil:
     object pgRect_New4(int x, int y, int w, int h)
     void import_pygame_rect()
 
+    int pgFRect_Check(object rect)
+    SDL_FRect *pgFRect_FromObject(object obj, SDL_FRect *temp)
+    object pgFRect_New(SDL_FRect *r)
+    object pgFRect_New4(float x, float y, float w, float h)
+
     int pg_RGBAFromObjEx(object color, Uint8 rgba[], pgColorHandleFlags handle_flags) except 0
     object pgColor_NewLength(Uint8 rgba[], Uint8 length)
     void import_pygame_color()
@@ -449,9 +466,12 @@ cdef class Texture:
     cdef readonly Renderer renderer
     cdef readonly int width
     cdef readonly int height
-
+    cdef draw_internalF(self, SDL_Rect *csrcrect, SDL_FRect *cdstrect, float angle=*, SDL_FPoint *originptr=*,
+                       bint flip_x=*, bint flip_y=*)
     cdef draw_internal(self, SDL_Rect *csrcrect, SDL_Rect *cdstrect, float angle=*, SDL_Point *originptr=*,
                        bint flip_x=*, bint flip_y=*)
+    cpdef void drawF(self, srcrect=*, dstrect=*, float angle=*, origin=*,
+                    bint flip_x=*, bint flip_y=*)
     cpdef void draw(self, srcrect=*, dstrect=*, float angle=*, origin=*,
                     bint flip_x=*, bint flip_y=*)
 
